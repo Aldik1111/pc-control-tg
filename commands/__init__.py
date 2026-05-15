@@ -1,0 +1,2 @@
+from commands.photo_command import WebCamCommand, ScreenshotCommand
+from commands.program_command import OpenProgramCommand, CloseProgramCommand

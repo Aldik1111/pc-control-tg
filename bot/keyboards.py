@@ -1,25 +1,35 @@
 from telebot import types
 
 def main_menu():
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add(types.KeyboardButton("Photo"))
-    markup.add(types.KeyboardButton("Open Program"))
-    markup.add(types.KeyboardButton("Exit"))
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+    markup.add(
+        types.KeyboardButton("📷 Photo"),
+        types.KeyboardButton("💻 Program")
+    )
+    markup.add(types.KeyboardButton("📊 History"))
+
     return markup
 
 def photo_menu():
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add(types.KeyboardButton("Web"))
-    markup.add(types.KeyboardButton("Screen"))
-    markup.add(types.KeyboardButton("Main"))
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+    markup.add(
+        types.KeyboardButton("📸 Webcam"),
+        types.KeyboardButton("🖥 Screenshot"))
+    markup.add(types.KeyboardButton("🏠 Main"))
     return markup
 
 def program_menu():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add(types.KeyboardButton("1"))
-    markup.add(types.KeyboardButton("2"))
-    markup.add(types.KeyboardButton("3"))
-    markup.add(types.KeyboardButton("4"))
-    markup.add(types.KeyboardButton("Main"))
+    markup.add(
+        types.KeyboardButton("🌐 Chrome"),
+           types.KeyboardButton("🎵 Spotify"))
+    markup.add(
+        types.KeyboardButton("🎮 Steam"),
+        types.KeyboardButton("🐍 Pycharm"))
+    markup.add(
+        types.KeyboardButton("🔧 Other"),
+        types.KeyboardButton("❌ Close")
+    )
+    markup.add(types.KeyboardButton("🏠 Main"))
     return markup
 

@@ -28,7 +28,20 @@ def log_action(user_id: int, action:str):
     _write_log(entries)
 
 def get_log() -> list:
-    entries = _read_log()
+    return _read_log()
 
 def get_user_log(user_id: int) -> list:
     return [entry for entry in _read_log() if entry["user_id"] == user_id]
+
+def get_last_logs(n: int = 5) -> str:
+    entries = _read_log()
+    last = entries[-n:] if len(entries) >= n else entries
+    if not last:
+        return "No history yet."
+    result = "📊 Last actions:\n\n"
+    for entry in last:
+        result += f"🕐 {entry['time']}\n"
+        result += f"👤 User: {entry['user_id']}\n"
+        result += f"⚡ Action: {entry['action']}\n"
+        result += "─────────────────\n"
+    return result

@@ -20,19 +20,19 @@ def owner_required(bot):
     return decorator
 
 
-def log_execution(action: str):
+def log_command(action: str):
     def decorator(func):
         @wraps(func)
         def wrapper(message, *args, **kwargs):
             from data.logger import log_action
+            # Лог в файл
             log_action(message.from_user.id, action)
-            return func(message, *args, **kwargs)
-
+            # Время выполнения в консоль
             start = time.time()
-            print(f"[CMD] {func.__qualname__} started")
-            result = func(*args, **kwargs)
+            print(f"[CMD] {action} started")
+            result = func(message, *args, **kwargs)
             elapsed = time.time() - start
-            print(f"[CMD] {func.__qualname__} finished in {elapsed:.2f}s")
+            print(f"[CMD] {action} finished in {elapsed:.2f}s")
             return result
         return wrapper
     return decorator

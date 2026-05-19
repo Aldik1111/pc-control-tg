@@ -1,6 +1,6 @@
 import requests
 from commands.base_command import Command
-from utils.decorators import log_execution, retry
+from utils.decorators import retry
 
 
 class WeatherCommand(Command):
@@ -11,7 +11,6 @@ class WeatherCommand(Command):
         super().__init__(bot, message)
         self.city = city
 
-    @log_execution
     def execute(self):
         try:
             self.send(f"🌍 Getting weather for {self.city}...")

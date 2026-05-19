@@ -1,14 +1,23 @@
-from bot.keyboards import main_menu, photo_menu,program_menu, notes_menu
+from email import message
+
+from bot.keyboards import main_menu, photo_menu,program_menu, notes_menu, turn_menu
+from bot.auth import owner_only
 from commands.photo_command import WebCamCommand, ScreenshotCommand
 from commands.program_command import OpenProgramCommand, CloseProgramCommand
 from commands.logger import log_action,get_last_logs
 from commands.notes import add_note, get_all_notes, delete_note
-from commands.computer_command import StatsCommand, ProcessesCommand, ShutdownCommand, RestartCommand, CancelShutdownCommand
+from commands.computer_command import (StatsCommand, ProcessesCommand,
+    ShutdownCommand, RestartCommand, CancelShutdownCommand,
+    SleepCommand, LockCommand)
+from commands.weather_command import WeatherCommand
+
 
 
 def register_handlers(bot):
     @bot.message_handler(commands=['start'])
     def cmd_start(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "/start")
         bot.send_message(
             message.chat.id,
@@ -20,33 +29,52 @@ def register_handlers(bot):
 
     @bot.message_handler(func = lambda x: x.text in ["🏠 Main", "Main", "Menu"])
     def handle_main(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Main menu")
         bot.send_message(message.chat.id, "Main menu", reply_markup=main_menu())
 
     @bot.message_handler(func = lambda x: x.text in ["📷 Photo", "Photo"])
     def handle_photo(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Photo menu")
         bot.send_message(message.chat.id, "📷 Photo", reply_markup=photo_menu())
 
     @bot.message_handler(func = lambda x: x.text in ["💻 Program", "Programs", "Open program"])
     def handle_program(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Program menu")
         bot.send_message(message.chat.id, "💻 Program", reply_markup=program_menu())
 
     @bot.message_handler(func = lambda x: x.text in ["Close"])
     def handle_close(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Close program")
         bot.send_message(message.chat.id, "Close program", reply_markup=program_menu())
 
+
+    @bot.message_handler(func = lambda x: x.text in ["🔴 Turnoff"])
+    def turnoff_menu(message):
+        if not owner_only(bot,message):
+            return
+        log_action(message.from_user.id, "Close program")
+        bot.send_message(message.chat.id, "🔴 Turnoff menu", reply_markup=turn_menu())
     # ─── Фото ─────────────────────────────────────────────────
     @bot.message_handler(func=lambda m: m.text in ["📸 Webcam", "web", "Web"] )
     def handle_webcam(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id,"Webcam photo")
         cmd = WebCamCommand(bot, message)
         cmd.execute()
 
     @bot.message_handler(func=lambda m: m.text in ["🖥 Screenshot", "screen", "Screenshot", "Screen", "screenshot"])
     def handle_screenshot(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Screenshot")
         cmd = ScreenshotCommand(bot, message)
         cmd.execute()
@@ -54,6 +82,8 @@ def register_handlers(bot):
     # ─── Открыть программы ────────────────────────────────────
     @bot.message_handler(func=lambda m: m.text == "🌐 Chrome")
     def handle_chrome(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Open Chrome")
         cmd = OpenProgramCommand(bot, message, "chrome", match_closest=True)
         cmd.execute()
@@ -61,18 +91,24 @@ def register_handlers(bot):
 
     @bot.message_handler(func=lambda m: m.text == "🎮 Steam")
     def handle_steam(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Open Steam")
         cmd = OpenProgramCommand(bot, message, "steam", match_closest=True)
         cmd.execute()
 
-    @bot.message_handler(func=lambda m: m.text == "🐍 Pycharm")
+    @bot.message_handler(func=lambda m: m.text == "🐍 Whatsapp")
     def handle_pycharm(message):
-        log_action(message.from_user.id, "Open PyCharm")
-        cmd = OpenProgramCommand(bot, message, "pycharm", match_closest=True)
+        if not owner_only(bot, message):
+            return
+        log_action(message.from_user.id, "Open Whatsapp")
+        cmd = OpenProgramCommand(bot, message, "whatsapp", match_closest=True)
         cmd.execute()
 
     @bot.message_handler(func=lambda m: m.text == "🎵 Spotify")
     def handle_spotify(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Spotify")
         cmd = OpenProgramCommand(bot, message, "spotify", match_closest=True)
         cmd.execute()
@@ -80,11 +116,15 @@ def register_handlers(bot):
     # ─── Другие программы (ввод вручную) ──────────────────────
     @bot.message_handler(func=lambda m: m.text == "🔧 Other")
     def handle_other_open(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Other program")
         bot.send_message(message.chat.id, "Input name of program:")
         bot.register_next_step_handler(message, _open_custom_program)
 
     def _open_custom_program(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, f"Open custom: {message.text}")
         cmd = OpenProgramCommand(bot, message, message.text, match_closest=True)
         cmd.execute()
@@ -92,11 +132,15 @@ def register_handlers(bot):
     # ─── Закрыть программу (ввод вручную) ─────────────────────
     @bot.message_handler(func=lambda m: m.text == "❌ Close")
     def handle_close(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Close menu")
         bot.send_message(message.chat.id, "Input program name to close:")
         bot.register_next_step_handler(message, _close_custom_program)
 
     def _close_custom_program(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, f"Close: {message.text}")
         cmd = CloseProgramCommand(bot, message, message.text, match_closest=True)
         cmd.execute()
@@ -106,32 +150,46 @@ def register_handlers(bot):
     #────────── Notes ────────────────────────────────────────────
     @bot.message_handler(func=lambda m: m.text == "📊 History")
     def handle_history(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "History")
         bot.send_message(message.chat.id, get_last_logs(5))
 
     @bot.message_handler(func=lambda m: m.text == "📝 Notes")
     def handle_notes(message):
+        if not owner_only(bot, message):
+            return
         bot.send_message(message.chat.id, "📝 Notes menu:", reply_markup=notes_menu())
 
     @bot.message_handler(func=lambda m: m.text == "📋 All notes")
     def handle_all_notes(message):
+        if not owner_only(bot, message):
+            return
         bot.send_message(message.chat.id, get_all_notes())
 
     @bot.message_handler(func=lambda m: m.text == "➕ Add note")
     def handle_add_note(message):
+        if not owner_only(bot, message):
+            return
         bot.send_message(message.chat.id, "✏️ Write your note:")
         bot.register_next_step_handler(message, _save_note)
 
     def _save_note(message):
+        if not owner_only(bot, message):
+            return
         add_note(message.from_user.id, message.text)
         bot.send_message(message.chat.id, f"✅ Note saved!\n\n" + get_all_notes())
 
     @bot.message_handler(func=lambda m: m.text == "🗑 Delete note")
     def handle_delete_note(message):
+        if not owner_only(bot, message):
+            return
         bot.send_message(message.chat.id, get_all_notes() + "\nEnter # to delete (e.g. 2):")
         bot.register_next_step_handler(message, _delete_note)
 
     def _delete_note(message):
+        if not owner_only(bot, message):
+            return
         try:
             index = int(message.text.strip("#"))
             if delete_note(index):
@@ -145,6 +203,8 @@ def register_handlers(bot):
     # _________________________________Process and Stats ------------------------
     @bot.message_handler(func=lambda m: m.text == "📊 Stats")
     def handle_stats(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Stats")
         bot.send_message(message.chat.id, "⏳ Collecting data...")
         cmd = StatsCommand(bot, message)
@@ -152,6 +212,8 @@ def register_handlers(bot):
 
     @bot.message_handler(func=lambda m: m.text == "⚡ Processes")
     def handle_processes(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Processes")
         bot.send_message(message.chat.id, "⏳ Collecting processes...")
         cmd = ProcessesCommand(bot, message)
@@ -161,18 +223,72 @@ def register_handlers(bot):
 
     @bot.message_handler(func=lambda m: m.text == "🔴 Shutdown")
     def handle_shutdown(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Shutdown")
         cmd = ShutdownCommand(bot, message)
         cmd.execute()
 
     @bot.message_handler(func=lambda m: m.text == "🔄 Restart")
     def handle_restart(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Restart")
         cmd = RestartCommand(bot, message)
         cmd.execute()
 
     @bot.message_handler(commands=["cancel"])
     def handle_cancel(message):
+        if not owner_only(bot, message):
+            return
         log_action(message.from_user.id, "Cancel shutdown")
         cmd = CancelShutdownCommand(bot, message)
+        cmd.execute()
+
+    @bot.message_handler(func=lambda m: m.text == "😴 Sleep")
+    def handle_sleep(message):
+        if not owner_only(bot, message):
+            return
+        log_action(message.from_user.id, "Sleep")
+        cmd = SleepCommand(bot, message)
+        cmd.execute()
+
+    @bot.message_handler(func=lambda m: m.text == "🔒 Lock")
+    def handle_lock(message):
+        if not owner_only(bot, message):
+            return
+        log_action(message.from_user.id, "Lock")
+        cmd = LockCommand(bot, message)
+        cmd.execute()
+
+
+    # -------------------------------- download photo from tg -----------------------
+    @bot.message_handler(content_types=["photo"])
+    def handle_incoming_photo(message):
+        log_action(message.from_user.id, "Received photo")
+        if not owner_only(bot, message):
+            return
+        # Берём фото лучшего качества (последнее в списке)
+        file_id = message.photo[-1].file_id
+        file_info = bot.get_file(file_id)
+        downloaded = bot.download_file(file_info.file_path)
+
+        # Сохраняем на ПК
+        save_path = f"data/received_{file_id[:8]}.jpg"
+        with open(save_path, "wb") as f:
+            f.write(downloaded)
+
+        bot.send_message(message.chat.id, f"✅ Photo saved to: {save_path}")
+
+    # ----------------------------- Weather -----------------------------------
+    @bot.message_handler(func=lambda m: m.text == "🌤 Weather")
+    def handle_weather(message):
+        if not owner_only(bot, message):
+            return
+        bot.send_message(message.chat.id, "🌍 Enter city name:")
+        bot.register_next_step_handler(message, _get_weather)
+
+    def _get_weather(message):
+        log_action(message.from_user.id, f"Weather: {message.text}")
+        cmd = WeatherCommand(bot, message, message.text)
         cmd.execute()

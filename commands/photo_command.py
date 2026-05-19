@@ -1,10 +1,12 @@
 import os, time, cv2, pyautogui
 from commands.base_command import Command
+from utils.decorators import log_execution
 
 class WebCamCommand(Command):
 
     PATH = "web.png"
 
+    @log_execution
     def execute(self):
         try:
             self._capture()
@@ -31,6 +33,7 @@ class ScreenshotCommand(Command):
     PATH = "screenshot.png"
     DELAY = 3
 
+    @log_execution
     def execute(self):
         try:
             self.send(f"Screenshot after {self.DELAY} seconds")

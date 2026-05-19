@@ -14,11 +14,8 @@ def main_menu():
         types.KeyboardButton("📊 Stats"),
         types.KeyboardButton("⚡ Processes")
     )
-    markup.add(
-        types.KeyboardButton("🔴 Shutdown"),
-        types.KeyboardButton("🔄 Restart")
-    )
-
+    markup.add(types.KeyboardButton("🌤 Weather"))
+    markup.add(types.KeyboardButton("🔴 Turnoff"))
     return markup
 
 def photo_menu():
@@ -36,13 +33,28 @@ def program_menu():
            types.KeyboardButton("🎵 Spotify"))
     markup.add(
         types.KeyboardButton("🎮 Steam"),
-        types.KeyboardButton("🐍 Pycharm"))
+        types.KeyboardButton("🐍 Whatsapp"))
     markup.add(
         types.KeyboardButton("🔧 Other"),
         types.KeyboardButton("❌ Close")
     )
     markup.add(types.KeyboardButton("🏠 Main"))
     return markup
+
+def turn_menu():
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+    markup.add(
+        types.KeyboardButton("🔴 Shutdown"),
+        types.KeyboardButton("🔄 Restart")
+    )
+    markup.add(
+        types.KeyboardButton("😴 Sleep"),
+        types.KeyboardButton("🔒 Lock")
+    )
+    markup.add(types.KeyboardButton("🏠 Main"))
+    return markup
+
+
 
 def notes_menu():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)

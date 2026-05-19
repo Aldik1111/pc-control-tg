@@ -10,9 +10,9 @@ class OpenProgramCommand(Command):
 
     def execute(self):
         try:
-            self.send(f"{self.program_name} opened")
             app_open(self.program_name, match_closest=self.match_closest)
             ScreenshotCommand(self.bot, self.message).execute()
+            self.send(f"{self.program_name} opened")
         except Exception as e:
             self.send(f"{self.program_name} failed. Reason: {e}")
 
@@ -24,8 +24,8 @@ class CloseProgramCommand(Command):
 
     def execute(self):
         try:
-            self.send(f"{self.program_name} closed")
             app_close(self.program_name, match_closest=self.match_closest)
             ScreenshotCommand(self.bot, self.message).execute()
+            self.send(f"{self.program_name} closed")
         except Exception as e:
             self.send(f"{self.program_name} failed. Reason: {e}")

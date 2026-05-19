@@ -4,7 +4,7 @@ import json
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from data.logger import log_action, get_log, get_user_log
+from commands.logger import log_action, get_log, get_user_log
 
 TEST_LOG = "data/log.json"
 

@@ -6,7 +6,18 @@ def main_menu():
         types.KeyboardButton("📷 Photo"),
         types.KeyboardButton("💻 Program")
     )
-    markup.add(types.KeyboardButton("📊 History"))
+    markup.add(
+        types.KeyboardButton("📊 History"),
+        types.KeyboardButton("📝 Notes")
+    )
+    markup.add(
+        types.KeyboardButton("📊 Stats"),
+        types.KeyboardButton("⚡ Processes")
+    )
+    markup.add(
+        types.KeyboardButton("🔴 Shutdown"),
+        types.KeyboardButton("🔄 Restart")
+    )
 
     return markup
 
@@ -30,6 +41,16 @@ def program_menu():
         types.KeyboardButton("🔧 Other"),
         types.KeyboardButton("❌ Close")
     )
+    markup.add(types.KeyboardButton("🏠 Main"))
+    return markup
+
+def notes_menu():
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+    markup.add(
+        types.KeyboardButton("➕ Add note"),
+        types.KeyboardButton("🗑 Delete note")
+    )
+    markup.add(types.KeyboardButton("📋 All notes"))
     markup.add(types.KeyboardButton("🏠 Main"))
     return markup
 

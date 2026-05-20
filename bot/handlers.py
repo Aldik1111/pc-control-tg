@@ -4,9 +4,9 @@ from commands.photo_command import WebCamCommand, ScreenshotCommand
 from commands.program_command import OpenProgramCommand, CloseProgramCommand
 from data.logger import log_action,get_last_logs
 from data.notes import add_note, get_all_notes, delete_note
-from commands.computer_command import (StatsCommand, ProcessesCommand,
-    ShutdownCommand, RestartCommand, CancelShutdownCommand,
+from commands.computer_command import (ShutdownCommand, RestartCommand, CancelShutdownCommand,
     SleepCommand, LockCommand)
+from commands.stats_command import StatsCommand,ProcessesCommand
 from commands.weather_command import WeatherCommand
 from utils.decorators import owner_required,log_command
 
